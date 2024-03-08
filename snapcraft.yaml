@@ -1,0 +1,48 @@
+name: vale
+base: core22
+version: 3.2.2
+summary: Command-line tool and LSP that brings code-like linting to prose.
+description: |
+  Vale is a command-line tool that brings code-like linting to prose. It's fast,
+  and highly customizable.
+
+  For convenience, this snap also bundles the vale-ls Language Server
+
+grade: devel
+confinement: strict
+apps:
+  vale:
+    command: bin/vale
+    environment:
+      HOME: $SNAP_REAL_HOME
+    plugs:
+      - home
+      - network # needed for vale sync
+      - dot-vale
+  vale-ls:
+    command: bin/vale-ls
+    environment:
+      HOME: $SNAP_REAL_HOME
+    plugs:
+      - home
+      - dot-vale
+
+plugs:
+  dot-vale:
+    interface: personal-files
+    write:
+      - $HOME/.vale.ini
+      - $HOME/.local/share/vale
+
+parts:
+  vale:
+    plugin: go
+    source: https://github.com/errata-ai/vale.git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
+    build-snaps:
+      - go
+
+  vale-ls:
+    plugin: rust
+    source: https://github.com/errata-ai/vale-ls.git
+    source-tag: v0.3.7
