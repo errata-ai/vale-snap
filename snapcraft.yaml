@@ -11,11 +11,15 @@ description: |
 license: MIT
 grade: devel
 confinement: strict
+
+environment:
+  HOME: $SNAP_REAL_HOME
+  PYTHONHOME: /usr:$SNAP/usr
+  RUBYLIB: $SNAP/usr/lib/ruby/vendor_ruby/3.0.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/ruby/vendor_ruby/3.0.0:$SNAP/usr/lib/ruby/vendor_ruby:$SNAP/usr/lib/ruby/3.0.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/ruby/3.0.0
+
 apps:
   vale:
     command: bin/vale
-    environment:
-      HOME: $SNAP_REAL_HOME
     plugs:
       - home
       - network # needed for vale sync
@@ -34,6 +38,7 @@ plugs:
     write:
       - $HOME/.vale.ini
       - $HOME/.local/share/vale
+      - $HOME/.config/vale
 
 parts:
   vale:
@@ -47,3 +52,27 @@ parts:
     plugin: rust
     source: https://github.com/errata-ai/vale-ls.git
     source-tag: v0.3.7
+
+  asciidoctor:
+    plugin: nil
+    stage-packages:
+      - asciidoctor
+    override-build: |
+      set -ex
+      snapcraftctl build
+      sed -i '1s|#!/usr/bin/ruby|#!/usr/bin/env ruby|' $SNAPCRAFT_PART_INSTALL/usr/bin/asciidoctor
+      # don't try and flock() gemspecs since this is blocked by AppArmor - see
+      # https://github.com/rubygems/rubygems/pull/5278 in particular
+      # https://github.com/rubygems/rubygems/pull/5278/commits/27b682c81226838b1254ac5843a3f5b1cb20f076
+      sed -i 's|!solaris_platform|win_platform|' $SNAPCRAFT_PART_INSTALL/usr/lib/ruby/vendor_ruby/rubygems.rb
+
+  rst2html:
+    plugin: nil
+    stage-packages:
+      - python3-docutils
+    override-build: |
+      set -ex
+      snapcraftctl build
+      sed -i "s|'/usr/share/docutils/'|os.path.expandvars('\$SNAP/usr/share/docutils/')|" $SNAPCRAFT_PART_INSTALL/usr/lib/python3/dist-packages/docutils/__init__.py
+    organize:
+      usr/share/docutils/scripts/python3: usr/bin
