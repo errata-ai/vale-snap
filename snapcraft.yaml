@@ -9,7 +9,7 @@ description: |
   For convenience, this snap also bundles the vale-ls Language Server
 
 license: MIT
-grade: devel
+grade: stable
 confinement: strict
 
 environment:
