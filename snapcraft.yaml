@@ -6,7 +6,12 @@ description: |
   Vale is a command-line tool that brings code-like linting to prose. It's fast,
   and highly customizable.
 
-  For convenience, this snap also bundles the vale-ls Language Server
+  For convenience, this snap also bundles the vale-ls Language Server.
+
+  If you store documents on an external USB drive or similar, ensure you
+  manually connect the removable-media interface after installing the snap:
+
+      snap connect vale:removable-media
 
 license: MIT
 grade: stable
@@ -22,6 +27,7 @@ apps:
     command: bin/vale
     plugs:
       - home
+      - removable-media
       - network # needed for vale sync
       - dot-vale
   vale-ls:
@@ -30,6 +36,7 @@ apps:
       HOME: $SNAP_REAL_HOME
     plugs:
       - home
+      - removable-media
       - dot-vale
 
 plugs:
