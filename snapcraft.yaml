@@ -1,6 +1,6 @@
 name: vale
-base: core22
 version: 3.8.0
+base: core24
 summary: Command-line tool and LSP that brings code-like linting to prose.
 description: |
   Vale is a command-line tool that brings code-like linting to prose. It's fast,
@@ -20,7 +20,16 @@ confinement: strict
 environment:
   HOME: $SNAP_REAL_HOME
   PYTHONHOME: /usr:$SNAP/usr
-  RUBYLIB: $SNAP/usr/lib/ruby/vendor_ruby/3.0.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/ruby/vendor_ruby/3.0.0:$SNAP/usr/lib/ruby/vendor_ruby:$SNAP/usr/lib/ruby/3.0.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/ruby/3.0.0
+
+layout:
+  /usr/lib/ruby:
+    symlink: $SNAP/usr/lib/ruby
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/ruby:
+    symlink: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/ruby
+  /usr/share/rubygems-integration/all:
+    symlink: $SNAP/usr/share/rubygems-integration/all
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/rubygems-integration:
+    symlink: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/rubygems-integration
 
 apps:
   vale:
