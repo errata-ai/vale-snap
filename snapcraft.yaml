@@ -63,6 +63,11 @@ parts:
     source-tag: v$SNAPCRAFT_PROJECT_VERSION
     build-snaps:
       - go
+    override-build: |
+      set -ex
+      # duplicate what snapcraft would do so we can set main.version via ldflags
+      go mod download all
+      go install -p $SNAPCRAFT_PARALLEL_BUILD_COUNT -ldflags "-s -w -X main.version=v$SNAPCRAFT_PROJECT_VERSION  -linkmode=external" ./...
 
   vale-ls:
     plugin: rust
