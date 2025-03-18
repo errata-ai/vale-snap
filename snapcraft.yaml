@@ -1,5 +1,5 @@
 name: vale
-version: 3.9.6
+version: 3.10.0
 base: core24
 summary: Command-line tool and LSP that brings code-like linting to prose.
 description: |
