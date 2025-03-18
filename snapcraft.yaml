@@ -72,7 +72,7 @@ parts:
   vale-ls:
     plugin: rust
     source: https://github.com/errata-ai/vale-ls.git
-    source-tag: v0.3.8
+    source-tag: v0.4.0
 
   asciidoctor:
     plugin: nil
