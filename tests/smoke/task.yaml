@@ -21,3 +21,7 @@ execute: |
   jq -r '."example.rst".[0].Message' vale.json | MATCH "'ReStructuredText \(rst\): plain text markup' should use sentence-style capitalization."
 
   rm -f vale.json
+
+  # also check vale-ls appears to run
+  vale.vale-ls --help | MATCH 'The official Vale Language Server'
+  vale.vale-ls --version | MATCH 'vale-ls'
