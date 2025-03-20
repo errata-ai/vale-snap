@@ -1,0 +1,23 @@
+summary: basic smoke test
+
+prepare: |
+  apt install -y jq
+
+restore: |
+  apt remove --purge -y jq
+  rm -f vale.json
+
+execute: |
+  # run vale on example files - these need to be in somewhere vale can read them
+  # from - so do it in home
+  cd $HOME
+
+  cp $SPREAD_PATH/tests/example.* .
+
+  vale --output JSON example.* >& >(tee vale.json) || true
+
+  # and check we get the expected result
+  jq -r '."example.adoc".[0].Message' vale.json | MATCH "'Book Title' should use sentence-style capitalization."
+  jq -r '."example.rst".[0].Message' vale.json | MATCH "'ReStructuredText \(rst\): plain text markup' should use sentence-style capitalization."
+
+  rm -f vale.json
